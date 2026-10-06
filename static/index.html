@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SMS Workspace</title>
+<style>
+:root{--bg:#f5f7fa;--card:#fff;--ink:#17202e;--mute:#667085;--line:#e1e6ee;--brand:#1f4fd8;
+--met:#1a7f4b;--partial:#b7791f;--not_met:#c0392b;--no_evidence:#667085}
+@media (prefers-color-scheme:dark){:root{--bg:#0f141c;--card:#171e29;--ink:#e6eaf2;--mute:#8d98ab;--line:#283142;--brand:#6d93ff;
+--met:#4cc38a;--partial:#e3b341;--not_met:#ff7b6b;--no_evidence:#8d98ab}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,Segoe UI,sans-serif}
+header{display:flex;align-items:center;gap:16px;padding:12px 24px;background:var(--card);border-bottom:1px solid var(--line);flex-wrap:wrap}
+header h1{font-size:18px;margin:0}
+.pill{font-size:12px;padding:2px 10px;border-radius:99px;border:1px solid var(--line);color:var(--mute)}
+.pill.ok{color:var(--met);border-color:var(--met)}.pill.bad{color:var(--not_met);border-color:var(--not_met)}
+nav{display:flex;gap:4px;padding:0 24px;background:var(--card);border-bottom:1px solid var(--line);overflow-x:auto}
+nav button{background:none;border:0;padding:12px 14px;font:inherit;color:var(--mute);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+nav button.on{color:var(--brand);border-color:var(--brand);font-weight:600}
+main{max-width:980px;margin:24px auto;padding:0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px}
+h2{font-size:16px;margin:0 0 10px}
+button.p{background:var(--brand);color:#fff;border:0;border-radius:7px;padding:8px 14px;font:inherit;cursor:pointer}
+button.p:disabled{opacity:.5;cursor:default}
+button.s{background:none;border:1px solid var(--line);color:var(--ink);border-radius:7px;padding:5px 10px;font:inherit;font-size:13px;cursor:pointer}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:7px 10px;width:100%}
+textarea{min-height:70px;resize:vertical}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row>*{flex:0 0 auto}.row>.grow{flex:1 1 200px}
+.mute{color:var(--mute);font-size:13px}
+.badge{display:inline-block;font-size:12px;font-weight:600;padding:1px 9px;border-radius:99px;border:1px solid currentColor}
+.met{color:var(--met)}.partial{color:var(--partial)}.not_met{color:var(--not_met)}.no_evidence{color:var(--no_evidence)}
+.quote{border-left:3px solid var(--line);padding:2px 10px;margin:8px 0;color:var(--mute);font-size:14px}
+.src{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:8px;font-size:13px}
+.answer{white-space:pre-wrap}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.bar{height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:8px}.bar>div{height:100%;background:var(--brand)}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:24px;text-align:center;color:var(--mute)}
+.drop.over{border-color:var(--brand)}
+.hide{display:none}
+.authwrap{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.authwrap.hide{display:none}
+.authcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;width:100%;max-width:380px}
+.authcard input{margin-bottom:10px}.err{color:var(--not_met);font-size:13px;margin-bottom:8px}
+.kind-own{color:var(--brand)}.kind-regulation{color:var(--not_met)}.kind-amc{color:var(--partial)}
+.aligned{color:var(--met)}.drifted{color:var(--partial)}.gap{color:var(--not_met)}
+.chart{display:flex;align-items:flex-end;gap:6px;height:150px;margin-top:10px}
+.chart div.col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:12px;color:var(--mute);cursor:pointer}
+.chart div.col span.b{width:100%;background:var(--brand);border-radius:4px 4px 0 0;min-height:2px}
+.chart div.col.sel span.b{background:var(--partial)}
+.md{white-space:pre-wrap}
+.chatwrap{display:flex;gap:16px;align-items:flex-start}
+.side{width:230px;flex:0 0 230px;position:sticky;top:12px}
+.chatmain{flex:1;min-width:0}
+.sh{display:flex;justify-content:space-between;align-items:center;margin:16px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+.item{padding:6px 8px;border-radius:7px;cursor:pointer;font-size:14px;overflow:hidden;text-overflow:ellipsis}
+.item:hover{background:var(--card)}.item.on{background:var(--card);border:1px solid var(--line)}
+.msg{padding:10px 14px;border-radius:10px;margin-bottom:10px;max-width:92%}
+.msg.u{background:var(--brand);color:#fff;margin-left:auto;white-space:pre-wrap}
+.msg.a{background:var(--card);border:1px solid var(--line)}
+details.src{padding:6px 10px}details.src summary{cursor:pointer}
+@media(max-width:760px){.chatwrap{flex-direction:column}.side{width:100%;flex:none;position:static}}
+</style>
+</head>
+<body>
+<div id="auth" class="authwrap hide"><div class="authcard"><h2 id="auth-title"></h2>
+  <div class="mute" id="auth-msg" style="margin-bottom:10px"></div>
+  <form id="auth-form" autocomplete="on"></form></div></div>
+<header>
+  <h1>SMS Workspace</h1>
+  <span class="mute">Aviation safety management audit assistant</span>
+  <span style="flex:1"></span>
+  <span id="st" class="pill">checking…</span>
+  <span id="who" class="mute"></span>
+  <button class="s hide" id="acct">Account</button><button class="s hide" id="logout">Log out</button>
+</header>
+<nav id="nav"></nav>
+<main>
+
+<section id="t-docs">
+  <div class="card">
+    <h2>Library</h2>
+    <div class="row" style="margin-bottom:10px"><label class="mute">Upload as</label>
+      <select id="kind" style="width:220px"><option value="own">Your document (manual, procedure)</option><option value="regulation">Binding regulation</option><option value="amc">AMC / guidance material</option></select>
+      <span class="mute">Add the rules you answer to as regulation / guidance so checks can cite them.</span></div>
+    <div class="drop" id="drop">Drop PDF, DOCX, TXT or MD files here, or <label style="color:var(--brand);cursor:pointer;text-decoration:underline">browse<input id="file" type="file" multiple class="hide" accept=".pdf,.docx,.txt,.md"></label>
+      <div class="mute" id="upmsg"></div></div>
+  </div>
+  <div class="card"><table id="doclist"></table></div>
+</section>
+
+<section id="t-ask" class="hide">
+  <div class="chatwrap">
+    <aside class="side">
+      <button class="p" style="width:100%" onclick="newChat(curProject)">+ New chat</button>
+      <div class="sh">Projects <button class="s" onclick="newProject()">+</button></div>
+      <div id="plist"></div>
+      <div class="sh">Recents</div>
+      <div id="rlist"></div>
+    </aside>
+    <div class="chatmain" id="chatmain"></div>
+  </div>
+</section>
+
+<section id="t-gap" class="hide">
+  <div class="card">
+    <div class="row">
+      <div class="grow"><h2 style="margin:0">SMS gap analysis (ICAO Annex 19, 12 elements)</h2>
+      <div class="mute">The AI proposes a status and a verbatim quote. You confirm each one.</div></div>
+      <select id="g-scope" style="width:200px"></select><button class="p" id="rungap">Run analysis</button>
+      <button class="s" id="report">Download .md</button>
+      <button class="s" id="report-docx">Download Word</button>
+    </div>
+    <div id="prog" class="hide"><div class="mute" id="progtxt"></div><div class="bar"><div id="progbar" style="width:0"></div></div></div>
+  </div>
+  <div id="gaplist"></div>
+</section>
+
+<section id="t-check" class="hide">
+  <div class="card">
+    <h2>Check your manual against a requirement</h2>
+    <textarea id="c-req" placeholder="Type the requirement or question, e.g. Does our SMS manual meet the hazard identification requirement?"></textarea>
+    <div class="row" style="margin-top:8px"><label class="mute">Scope</label><select id="c-scope" style="width:200px"></select><label class="mute">Your document</label><select id="c-doc" style="width:240px"></select>
+      <button class="p" id="c-go">Check</button></div>
+    <div class="mute" style="margin-top:6px">The result is a draft for your review. Add regulation / AMC text in the Library so it can be cited.</div>
+  </div>
+  <div id="c-out"></div>
+</section>
+
+<section id="t-occ" class="hide">
+  <div class="card">
+    <h2>Occurrence reports</h2>
+    <div class="row" style="margin-bottom:8px"><label class="mute">Scope</label><select id="o-scope" style="width:200px"></select><span class="mute" id="o-scope-note"></span></div>
+    <div class="row"><label class="s" style="cursor:pointer;border:1px solid var(--line);border-radius:7px;padding:5px 10px">Import CSV<input id="occ-file" type="file" accept=".csv" class="hide"></label>
+      <span class="mute" id="occ-msg">CSV with a date column (2026-03-14) and a description column; category is optional.</span>
+      <span style="flex:1"></span><button class="s" data-dl="md">Download .md</button><button class="s" data-dl="docx">Download Word</button><button class="s" id="occ-clear">Clear all</button></div>
+  </div>
+  <div id="occ-body"></div>
+</section>
+
+<section id="t-risk" class="hide">
+  <div class="card">
+    <h2>Draft a risk assessment</h2>
+    <div class="row"><select id="r-scope" style="width:200px"></select><input class="grow" id="r-act" placeholder="Activity, e.g. Low-visibility operations, Helicopter operations, MRO oversight"><button class="p" id="r-go">Draft</button></div>
+    <div class="mute" style="margin-top:6px">Ratings are proposed against your own matrix using the documents in the selected scope and the occurrence reports visible to that scope. The safety meeting decides.</div>
+    <div class="row" style="margin-top:8px"><span class="mute">Audit report for this scope:</span><button class="s" data-dl="md">Download .md</button><button class="s" data-dl="docx">Download Word</button></div>
+    <details style="margin-top:10px"><summary class="mute" style="cursor:pointer">Your risk matrix</summary>
+      <div id="mx" style="margin-top:8px"></div></details>
+  </div>
+  <div id="r-list"></div>
+</section>
+
+<section id="t-find" class="hide">
+  <div class="card"><div class="row"><label class="mute">Report scope</label><select id="f-scope" style="width:200px"></select><span class="mute grow">Findings are shared; the scope sets which assessments, risks and reports the audit report includes.</span><button class="s" data-dl="md">Download .md</button><button class="s" data-dl="docx">Download Word</button></div></div>
+  <div class="card">
+    <h2 id="fhead">New finding</h2>
+    <div class="row"><input class="grow" id="f-title" placeholder="Title"><select id="f-sev" style="width:110px"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+    <textarea id="f-desc" placeholder="Description" style="margin-top:8px"></textarea>
+    <div class="row" style="margin-top:8px">
+      <input class="grow" id="f-req" placeholder="Requirement (e.g. 3.2 Management of change)">
+      <input class="grow" id="f-owner" placeholder="Owner">
+      <input id="f-due" type="date" style="width:160px">
+      <select id="f-status" style="width:130px"><option>Open</option><option>In progress</option><option>Closed</option></select>
+      <button class="p" id="f-save">Save</button><button class="s hide" id="f-cancel">Cancel</button>
+    </div>
+  </div>
+  <div class="card"><table id="flist"></table></div>
+</section>
+
+<section id="t-users" class="hide">
+  <div class="card"><h2>Add a user</h2>
+    <div class="row"><input class="grow" id="u-name" placeholder="Username" autocomplete="off"><input class="grow" id="u-pw" type="password" placeholder="Temporary password (10+ characters)" autocomplete="new-password">
+      <select id="u-role" style="width:120px"><option value="member">Member</option><option value="admin">Admin</option></select><button class="p" id="u-add">Add</button></div>
+    <div class="mute" style="margin-top:6px">Members can use everything except user management and deleting projects. Chats are private to each user; all other work is shared.</div></div>
+  <div class="card"><table id="ulist"></table></div>
+  <div class="card"><h2>Network sharing</h2><div id="netinfo" class="mute"></div></div>
+</section>
+
+<section id="t-log" class="hide"><div class="card"><h2>Audit trail</h2><table id="loglist"></table></div></section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const KIND={own:"Your document",regulation:"Binding regulation",amc:"AMC / guidance"};
+const LABEL={met:"Met",partial:"Partially met",not_met:"Not met",no_evidence:"No evidence"};
+async function api(url,opt){const r=await fetch(url,opt);if(!r.ok){let m=r.statusText;try{m=(await r.json()).detail||m}catch{}
+ if(r.status===401&&!url.startsWith("/api/auth/")){showAuth("login","Your session ended. Please sign in.")}throw new Error(m)}return r.json()}
+const post=(u,b)=>api(u,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});
+const put=(u,b)=>api(u,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});
+
+let ME=null;
+const BASE_TABS=[["docs","Library"],["ask","Chat"],["check","Check manual"],["gap","Gap analysis"],["occ","Occurrences"],["risk","Risk assessment"],["find","Findings"],["log","Audit trail"]];
+let TABS=BASE_TABS;
+function buildNav(){TABS=ME&&ME.role==="admin"?[...BASE_TABS.slice(0,-1),["users","Users"],BASE_TABS[BASE_TABS.length-1]]:BASE_TABS;
+ $("#nav").innerHTML=TABS.map(([k,l])=>`<button data-t="${k}">${l}</button>`).join("")}
+function show(k){TABS.forEach(([t])=>{$("#t-"+t).classList.toggle("hide",t!==k)});
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===k));
+ ({docs:loadDocs,ask:loadAsk,check:loadCheck,gap:loadGap,occ:loadOcc,risk:loadRisk,find:loadFind,users:loadUsers,log:loadLog}[k]||(()=>{}))()}
+$("#nav").onclick=e=>{if(e.target.dataset.t)show(e.target.dataset.t)};
+
+async function status(){try{const s=await api("/api/status");const ok=s.ollama&&s.chat_ready&&s.embed_ready;
+ $("#st").className="pill "+(ok?"ok":"bad");
+ $("#st").textContent=ok?`Local · ${s.chat_model}`:(!s.ollama?"Ollama not running":`Missing model: ${!s.chat_ready?s.chat_model:s.embed_model}`)}catch{$("#st").textContent="server error"}}
+
+// documents
+async function loadDocs(){const d=(await api("/api/docs")).filter(x=>!x.project_id);
+ $("#doclist").innerHTML=d.length?"<tr><th>Name</th><th>Type</th><th>Chunks</th><th>Added</th><th></th></tr>"+d.map(x=>`<tr><td>${esc(x.name)}</td><td><span class="badge kind-${x.kind}">${KIND[x.kind]||x.kind}</span></td><td>${x.n_chunks}</td><td>${x.added}</td><td><button class="s" onclick="delDoc(${x.id})">Remove</button></td></tr>`).join(""):'<tr><td class="mute">No documents yet.</td></tr>'}
+async function delDoc(id){if(confirm("Remove this document?")){await api("/api/docs/"+id,{method:"DELETE"});loadDocs()}}
+async function upload(files){for(const f of files){$("#upmsg").textContent=`Indexing ${f.name}… (embedding locally)`;
+ const fd=new FormData();fd.append("file",f);fd.append("kind",$("#kind").value);try{await api("/api/docs",{method:"POST",body:fd})}catch(e){$("#upmsg").textContent=`${f.name}: ${e.message}`;return}}
+ $("#upmsg").textContent="Done.";loadDocs()}
+$("#file").onchange=e=>upload(e.target.files);
+const drop=$("#drop");drop.ondragover=e=>{e.preventDefault();drop.classList.add("over")};drop.ondragleave=()=>drop.classList.remove("over");
+drop.ondrop=e=>{e.preventDefault();drop.classList.remove("over");upload(e.dataTransfer.files)};
+
+// chat + projects
+let curProject=null, curChat=null;
+async function loadAsk(){const [ps,rs]=await Promise.all([api("/api/projects"),api("/api/chats")]);
+ $("#plist").innerHTML=ps.length?ps.map(p=>`<div class="item ${curProject===p.id&&!curChat?"on":""}" onclick="openProject(${p.id})">📁 ${esc(p.name)} <span class="mute">${p.n_chats}</span></div>`).join(""):'<div class="mute" style="padding:4px 8px">No projects yet.</div>';
+ $("#rlist").innerHTML=rs.length?rs.slice(0,30).map(c=>`<div class="item ${curChat===c.id?"on":""}" onclick="openChat(${c.id})">${esc(c.title)}${c.project?`<div class="mute">${esc(c.project)}</div>`:""}</div>`).join(""):'<div class="mute" style="padding:4px 8px">No chats yet.</div>';
+ if(!curChat&&curProject===null)$("#chatmain").innerHTML='<div class="card mute">Start a new chat, or open a project to keep related documents and chats together. Chats are saved here.</div>';
+ else if(!curChat&&curProject!==null)renderProject()}
+async function newProject(){const n=prompt("Project name");if(!n||!n.trim())return;const r=await post("/api/projects",{name:n});curChat=null;curProject=r.id;loadAsk()}
+async function newChat(pid){const r=await post("/api/chats",{project_id:pid});openChat(r.id)}
+async function openProject(id){curProject=id;curChat=null;await loadAsk()}
+async function renderProject(){const [ps,docs,chats]=await Promise.all([api("/api/projects"),api("/api/docs"),api("/api/chats?project_id="+curProject)]);
+ const p=ps.find(x=>x.id===curProject);if(!p){curProject=null;return loadAsk()}
+ const pd=docs.filter(d=>d.project_id===curProject);
+ $("#chatmain").innerHTML=`<div class="card"><div class="row"><h2 class="grow" style="margin:0">📁 ${esc(p.name)}</h2><button class="s" onclick="renameProject()">Rename</button>${ME&&ME.role==="admin"?'<button class="s" onclick="delProject()">Delete</button>':""}<button class="p" onclick="newChat(${p.id})">New chat</button></div>
+  <div class="mute" style="margin-top:4px">Chats here can use the shared Library plus this project's own documents.</div></div>
+  <div class="card"><h2>Project documents</h2><div class="row" style="margin-bottom:8px"><select id="pkind" style="width:210px"><option value="own">Your document</option><option value="regulation">Binding regulation</option><option value="amc">AMC / guidance</option></select>
+  <label class="s" style="cursor:pointer;border:1px solid var(--line);border-radius:7px;padding:5px 10px">Add files<input id="pfile" type="file" multiple class="hide" accept=".pdf,.docx,.txt,.md"></label><span class="mute" id="pmsg"></span></div>
+  ${pd.length?"<table>"+pd.map(d=>`<tr><td>${esc(d.name)}</td><td><span class="badge kind-${d.kind}">${KIND[d.kind]}</span></td><td><button class="s" onclick="delProjDoc(${d.id})">Remove</button></td></tr>`).join("")+"</table>":'<div class="mute">No documents in this project yet.</div>'}</div>
+  <div class="card"><h2>Chats</h2>${chats.length?chats.map(c=>`<div class="item" onclick="openChat(${c.id})">${esc(c.title)} <span class="mute">${c.updated.slice(0,16)}</span></div>`).join(""):'<div class="mute">No chats yet.</div>'}</div>`;
+ $("#pfile").onchange=async e=>{for(const f of e.target.files){$("#pmsg").textContent=`Indexing ${f.name}…`;const fd=new FormData();fd.append("file",f);fd.append("kind",$("#pkind").value);fd.append("project_id",curProject);
+   try{await api("/api/docs",{method:"POST",body:fd})}catch(err){$("#pmsg").textContent=`${f.name}: ${err.message}`;return}}renderProject()}}
+async function renameProject(){const n=prompt("New name");if(n&&n.trim()){await put("/api/projects/"+curProject,{name:n});loadAsk()}}
+async function delProject(){if(confirm("Delete this project, its chats and its documents? The shared Library is not affected.")){await api("/api/projects/"+curProject,{method:"DELETE"});curProject=null;curChat=null;loadAsk()}}
+async function delProjDoc(id){if(confirm("Remove this document?")){await api("/api/docs/"+id,{method:"DELETE"});renderProject()}}
+function msgHtml(m){if(m.role==="user")return `<div class="msg u">${esc(m.content)}</div>`;
+ return `<div class="msg a"><div class="answer">${esc(m.content)}</div>${(m.sources||[]).map((s,i)=>`<details class="src"><summary><b>[${i+1}]</b> <span class="badge kind-${s.kind}">${KIND[s.kind]||""}</span> ${esc(s.doc)} ${esc(s.page)} <span class="mute">· ${(s.score*100).toFixed(0)}%</span></summary><div class="mute">${esc(s.text)}</div></details>`).join("")}</div>`}
+async function openChat(id){curChat=id;const c=await api("/api/chats/"+id);curProject=c.project_id;
+ $("#chatmain").innerHTML=`<div class="card"><div class="row"><b class="grow" id="ctitle">${esc(c.title)}</b><span class="mute">${c.project?"📁 "+esc(c.project):"Library only"}</span><button class="s" onclick="renameChat()">Rename</button><button class="s" onclick="delChat()">Delete</button></div></div>
+  <div id="msgs">${c.messages.map(msgHtml).join("")||'<div class="mute" style="padding:8px">Ask a question about your documents. Follow-ups remember the conversation.</div>'}</div>
+  <div class="card"><div class="row"><input class="grow" id="q" placeholder="Ask about your documents…"><button class="p" id="askbtn">Ask</button></div>
+  <div class="mute" style="margin-top:6px">Answers use only the documents available to this chat and cite their sources.</div></div>`;
+ $("#askbtn").onclick=sendQ;$("#q").onkeydown=e=>{if(e.key==="Enter")sendQ()};$("#q").focus();loadSide()}
+async function loadSide(){const [ps,rs]=await Promise.all([api("/api/projects"),api("/api/chats")]);
+ $("#plist").innerHTML=ps.map(p=>`<div class="item ${curProject===p.id&&!curChat?"on":""}" onclick="openProject(${p.id})">📁 ${esc(p.name)} <span class="mute">${p.n_chats}</span></div>`).join("")||'<div class="mute" style="padding:4px 8px">No projects yet.</div>';
+ $("#rlist").innerHTML=rs.slice(0,30).map(c=>`<div class="item ${curChat===c.id?"on":""}" onclick="openChat(${c.id})">${esc(c.title)}${c.project?`<div class="mute">${esc(c.project)}</div>`:""}</div>`).join("")}
+async function sendQ(){const q=$("#q").value.trim();if(!q||!curChat)return;$("#askbtn").disabled=true;$("#q").value="";
+ $("#msgs").insertAdjacentHTML("beforeend",msgHtml({role:"user",content:q})+'<div class="msg a mute" id="think">Thinking locally…</div>');
+ try{const r=await post(`/api/chats/${curChat}/ask`,{question:q});$("#think").outerHTML=msgHtml({role:"assistant",content:r.answer,sources:r.sources});$("#ctitle").textContent=r.title;loadSide()}
+ catch(e){$("#think").outerHTML=`<div class="msg a not_met">${esc(e.message)}</div>`}$("#askbtn").disabled=false;$("#q").focus()}
+async function renameChat(){const n=prompt("Chat title");if(n&&n.trim()){await put("/api/chats/"+curChat,{name:n});openChat(curChat)}}
+async function delChat(){if(confirm("Delete this chat?")){await api("/api/chats/"+curChat,{method:"DELETE"});curChat=null;loadAsk()}}
+
+// gap
+let poll=null;
+async function loadGap(polling){if(polling!==true)await fillScope($("#g-scope"));const g=await api("/api/gap"+sq());const j=g.job;
+ const mine=!j.scope||j.scope===(scope===null?"lib":String(scope));
+ $("#rungap").disabled=j.running;$("#prog").classList.toggle("hide",!j.running&&!(j.error&&mine));
+ $("#progtxt").textContent=j.error?("Error: "+j.error):mine?`Assessing ${j.current||"…"} (${j.done}/${j.total})`:"An analysis is running for another scope. Wait for it to finish.";
+ $("#progbar").style.width=(j.done/j.total*100)+"%";
+ if(j.running&&!poll)poll=setInterval(()=>loadGap(true),2000);if(!j.running&&poll){clearInterval(poll);poll=null;if(polling===true)return loadGap()}
+ const comps={};g.requirements.forEach(r=>(comps[r.component]=comps[r.component]||[]).push(r));
+ $("#gaplist").innerHTML=Object.entries(comps).map(([c,rs])=>`<h2 style="margin:18px 0 8px">${esc(c)}</h2>`+rs.map(card).join("")).join("")}
+function card(r){const a=r.assessment;let body='<div class="mute">Not assessed yet.</div>';
+ if(a){const fin=a.final_status||a.ai_status;
+  body=`<div class="row"><span class="badge ${fin}">${LABEL[fin]}</span><span class="mute">${a.final_status?"✓ reviewer confirmed":"AI suggestion · "+esc(a.model)}</span></div>
+  <div style="margin-top:6px">${esc(a.rationale)}</div>
+  ${a.quote?`<div class="quote">“${esc(a.quote)}”<div class="mute">${esc(a.source_doc)} ${esc(a.source_page)} ${a.quote_verified?"· ✓ quote verified in source":"· ⚠ quote not found in source"}</div></div>`:""}
+  ${a.reviewer_note?`<div class="mute">Note: ${esc(a.reviewer_note)}</div>`:""}
+  <div class="row" style="margin-top:8px"><select id="rs-${r.id}" style="width:150px">${Object.entries(LABEL).map(([k,v])=>`<option value="${k}" ${k===fin?"selected":""}>${v}</option>`).join("")}</select>
+  <input class="grow" id="rn-${r.id}" placeholder="Reviewer note" value="${esc(a.reviewer_note||"")}">
+  <button class="s" onclick="confirmReq('${r.id}')">Confirm</button>
+  <button class="s" onclick="draft('${r.id}')">Draft finding</button></div>`}
+ return `<div class="card"><b>${r.id} · ${esc(r.element)}</b><div class="mute" style="margin-bottom:6px">${esc(r.description)}</div>${body}</div>`}
+async function confirmReq(id){await put("/api/gap/"+id+sq(),{final_status:$("#rs-"+id).value,reviewer_note:$("#rn-"+id).value});loadGap()}
+async function draft(id){try{const d=await post("/api/findings/draft",{req_id:id,project_id:scope});show("find");
+ $("#f-title").value=d.title;$("#f-desc").value=d.description;$("#f-req").value=d.requirement}catch(e){alert(e.message)}}
+$("#g-scope").onchange=e=>{scope=e.target.value?+e.target.value:null;loadGap(true)};
+$("#rungap").onclick=async()=>{try{await post("/api/gap/run"+sq(),{});loadGap()}catch(e){alert(e.message)}};
+async function dlMd(){const t=await (await fetch("/api/report"+sq())).text();const a=document.createElement("a");
+ a.href=URL.createObjectURL(new Blob([t],{type:"text/markdown"}));a.download="sms-audit-report.md";a.click()}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-dl]");if(!b)return;
+ if(b.dataset.dl==="docx")location.href="/api/report.docx"+sq();else dlMd()});
+$("#f-scope").onchange=e=>{scope=e.target.value?+e.target.value:null};
+$("#report-docx").onclick=()=>{location.href="/api/report.docx"+sq()};
+$("#report").onclick=async()=>{const t=await (await fetch("/api/report"+sq())).text();const a=document.createElement("a");
+ a.href=URL.createObjectURL(new Blob([t],{type:"text/markdown"}));a.download="sms-audit-report.md";a.click()};
+
+// findings
+let editing=null;
+async function loadFind(){await fillScope($("#f-scope"));const f=await api("/api/findings");window._f=f;
+ $("#flist").innerHTML=f.length?"<tr><th>Finding</th><th>Severity</th><th>Owner / due</th><th>Status</th><th></th></tr>"+f.map(x=>`<tr><td><b>${esc(x.title)}</b><div class="mute">${esc(x.requirement)}</div><div class="mute">${esc(x.description)}</div></td><td>${x.severity}</td><td>${esc(x.owner)}<div class="mute">${x.due||""}</div></td><td>${x.status}</td><td><button class="s" onclick="editF(${x.id})">Edit</button> <button class="s" onclick="delF(${x.id})">✕</button></td></tr>`).join(""):'<tr><td class="mute">No findings yet.</td></tr>'}
+function editF(id){const x=window._f.find(v=>v.id===id);editing=id;
+ $("#f-title").value=x.title;$("#f-desc").value=x.description;$("#f-req").value=x.requirement;$("#f-sev").value=x.severity;
+ $("#f-owner").value=x.owner;$("#f-due").value=x.due;$("#f-status").value=x.status;$("#fhead").textContent="Edit finding";$("#f-cancel").classList.remove("hide");scrollTo(0,0)}
+function resetF(){editing=null;["title","desc","req","owner","due"].forEach(k=>$("#f-"+k).value="");$("#f-sev").value="Medium";$("#f-status").value="Open";$("#fhead").textContent="New finding";$("#f-cancel").classList.add("hide")}
+$("#f-cancel").onclick=resetF;
+$("#f-save").onclick=async()=>{const b={title:$("#f-title").value.trim(),description:$("#f-desc").value,requirement:$("#f-req").value,severity:$("#f-sev").value,owner:$("#f-owner").value,due:$("#f-due").value,status:$("#f-status").value};
+ if(!b.title)return alert("Title required");editing?await put("/api/findings/"+editing,b):await post("/api/findings",b);resetF();loadFind()};
+async function delF(id){if(confirm("Delete finding?")){await api("/api/findings/"+id,{method:"DELETE"});loadFind()}}
+
+// shared analysis scope: null = shared library only, number = that project (+ library)
+let scope=null;const sq=()=>scope===null?"":"?project_id="+scope;
+async function fillScope(sel){const ps=await api("/api/projects");if(scope!==null&&!ps.some(p=>p.id===scope))scope=null;
+ sel.innerHTML='<option value="">Library only</option>'+ps.map(p=>`<option value="${p.id}" ${p.id===scope?"selected":""}>📁 ${esc(p.name)} + library</option>`).join("");
+ sel.value=scope===null?"":String(scope)}
+// check manual
+async function loadCheck(){await fillScope($("#c-scope"));fillCheckDocs()}
+async function fillCheckDocs(){const d=await api("/api/docs");
+ $("#c-doc").innerHTML='<option value="">All documents in scope</option>'+d.filter(x=>x.kind==="own"&&(!x.project_id||x.project_id===scope)).map(x=>`<option value="${x.id}">${esc(x.name)}${x.project_id?" (project)":""}</option>`).join("")}
+$("#c-scope").onchange=e=>{scope=e.target.value?+e.target.value:null;fillCheckDocs()};
+$("#c-go").onclick=async()=>{const req=$("#c-req").value.trim();if(!req)return;$("#c-go").disabled=true;$("#c-out").innerHTML='<div class="card mute">Comparing locally…</div>';
+ try{const r=await post("/api/check",{requirement:req,doc_id:$("#c-doc").value?+$("#c-doc").value:null,project_id:scope});
+  const V={aligned:"Aligned",drifted:"Drifted",gap:"Gap"};
+  $("#c-out").innerHTML=`<div class="card"><div class="row"><span class="badge ${r.verdict}">${V[r.verdict]}</span><span class="mute">Draft for your review</span></div>
+  <div class="answer" style="margin-top:8px">${esc(r.summary)}</div>${r.has_rules?"":'<div class="mute" style="margin-top:8px">⚠ No regulation or AMC in the Library, so this compares only against your wording of the requirement.</div>'}
+  ${r.sources.map((s,i)=>`<div class="src"><b>${i+1}</b> <span class="badge kind-${s.kind}">${KIND[s.kind]}</span> ${esc(s.doc)} ${esc(s.page)}<div class="mute">${esc(s.text.slice(0,350))}${s.text.length>350?"…":""}</div></div>`).join("")}</div>`}
+ catch(e){$("#c-out").innerHTML=`<div class="card not_met">${esc(e.message)}</div>`}$("#c-go").disabled=false};
+
+// occurrences
+let occMonth=null;
+async function loadOcc(){await fillScope($("#o-scope"));const s=await api("/api/occ/summary"+sq());
+ $("#o-scope-note").textContent=scope===null?"Imports go to the shared library.":`Shows library + project reports. Imports and Clear apply to this project only (${s.mine} here).`;
+ if(!s.all_time){$("#occ-body").innerHTML='<div class="card mute">No reports yet.</div>';return}
+ const max=Math.max(...s.months.map(m=>m.n),1);occMonth=occMonth||s.months[s.months.length-1].m;
+ $("#occ-body").innerHTML=`<div class="card"><b>${s.total} reports in the last 12 months</b> <span class="mute">(${s.all_time} imported)</span>
+  <div class="chart">${s.months.map(m=>`<div class="col ${m.m===occMonth?"sel":""}" onclick="occMonth='${m.m}';loadOcc()"><span>${m.n}</span><span class="b" style="height:${m.n/max*100}%"></span><span>${m.m.slice(5)}</span></div>`).join("")}</div>
+  <div class="mute" style="margin-top:6px">Counts of reports, not of events. Click a month to select it.</div>
+  <div class="mute" style="margin-top:6px">${s.categories.map(c=>`${esc(c[0])}: ${c[1]}`).join(" · ")}</div></div>
+  <div class="card"><h2>Has something like this happened before?</h2><div class="row"><input class="grow" id="o-q" placeholder="Describe an occurrence…"><button class="p" id="o-go">Search</button></div><div id="o-res"></div></div>
+  <div class="card"><div class="row"><h2 style="margin:0" class="grow">Monthly safety pack: ${occMonth}</h2><button class="p" id="o-pack">Draft pack</button></div><div id="o-pack-out" class="md" style="margin-top:8px"></div></div>`;
+ $("#o-go").onclick=async()=>{const t=$("#o-q").value.trim();if(!t)return;
+  try{const r=await post("/api/occ/similar",{text:t,project_id:scope});$("#o-res").innerHTML=r.map(x=>`<div class="src"><b>${x.date}</b> ${esc(x.category)} <span class="mute">· similarity ${(x.score*100).toFixed(0)}%</span><div>${esc(x.text)}</div></div>`).join("")+'<div class="mute" style="margin-top:6px">Matches are by meaning, not proof of the same cause. Check the reports.</div>'}catch(e){$("#o-res").textContent=e.message}};
+ $("#o-pack").onclick=async()=>{$("#o-pack-out").textContent="Drafting locally…";
+  try{const r=await post("/api/occ/pack",{month:occMonth,project_id:scope});$("#o-pack-out").textContent=r.draft+"\n\n— Draft for the meeting. Check against the source reports."}catch(e){$("#o-pack-out").textContent=e.message}}}
+$("#o-scope").onchange=e=>{scope=e.target.value?+e.target.value:null;occMonth=null;loadOcc()};
+$("#occ-file").onchange=async e=>{const f=e.target.files[0];if(!f)return;$("#occ-msg").textContent="Importing and indexing…";
+ const fd=new FormData();fd.append("file",f);try{const r=await api("/api/occ/import"+sq(),{method:"POST",body:fd});$("#occ-msg").textContent=`Imported ${r.imported} reports (${r.skipped} skipped).`;occMonth=null;loadOcc()}catch(err){$("#occ-msg").textContent=err.message}};
+$("#occ-clear").onclick=async()=>{if(confirm(scope===null?"Delete the shared library's occurrence reports?":"Delete only this project's own occurrence reports? The library's stay.")){await api("/api/occ"+sq(),{method:"DELETE"});occMonth=null;loadOcc()}};
+
+// risk assessment
+let MX=null;
+async function loadRisk(){await fillScope($("#r-scope"));MX=await api("/api/matrix");
+ $("#mx").innerHTML=`<div class="row"><div class="grow"><div class="mute">Severity, low to high (5 labels, comma separated)</div><input id="mx-s" value="${esc(MX.severity.join(", "))}"></div>
+  <div class="grow"><div class="mute">Probability, low to high</div><input id="mx-p" value="${esc(MX.probability.join(", "))}"></div></div>
+  <div class="row" style="margin-top:8px"><span class="mute">Score = severity × probability. Intolerable from</span><input id="mx-i" type="number" style="width:70px" value="${MX.intolerable_from}"><span class="mute">acceptable below</span><input id="mx-a" type="number" style="width:70px" value="${MX.acceptable_below}"><button class="s" id="mx-save">Save matrix</button></div>`;
+ $("#mx-save").onclick=async()=>{try{await put("/api/matrix",{severity:$("#mx-s").value.split(",").map(x=>x.trim()),probability:$("#mx-p").value.split(",").map(x=>x.trim()),intolerable_from:+$("#mx-i").value,acceptable_below:+$("#mx-a").value});loadRisk()}catch(e){alert(e.message)}};
+ const r=await api("/api/risks"+sq());
+ $("#r-list").innerHTML=r.length?r.map(x=>{const opt=(arr,v)=>arr.map((l,i)=>`<option value="${i+1}" ${i+1===v?"selected":""}>${esc(l)}</option>`).join("");
+  const col=x.rating==="Intolerable"?"not_met":x.rating==="Acceptable"?"met":"partial";
+  return `<div class="card"><div class="row"><b class="grow">${esc(x.hazard)}</b><span class="badge ${col}">${x.rating} · ${x.score}</span><span class="badge ${x.status==="Decided"?"met":"no_evidence"}">${x.status}</span></div>
+  <div class="mute">${esc(x.activity)}</div><div style="margin-top:6px">${esc(x.consequence)}</div><div class="mute" style="margin-top:4px">${esc(x.rationale)}</div>
+  <div class="row" style="margin-top:8px"><select id="rs-${x.id}" style="width:170px">${opt(MX.severity,x.severity)}</select><select id="rp-${x.id}" style="width:190px">${opt(MX.probability,x.probability)}</select>
+  <input class="grow" id="rnote-${x.id}" placeholder="Meeting decision / note" value="${esc(x.note)}"><button class="s" onclick="decideRisk(${x.id})">Record decision</button><button class="s" onclick="delRisk(${x.id})">✕</button></div></div>`}).join(""):'<div class="card mute">No risk assessments yet.</div>'}
+async function decideRisk(id){await put("/api/risks/"+id,{severity:+$("#rs-"+id).value,probability:+$("#rp-"+id).value,note:$("#rnote-"+id).value});loadRisk()}
+async function delRisk(id){if(confirm("Delete this risk?")){await api("/api/risks/"+id,{method:"DELETE"});loadRisk()}}
+$("#r-scope").onchange=e=>{scope=e.target.value?+e.target.value:null;loadRisk()};
+$("#r-go").onclick=async()=>{const a=$("#r-act").value.trim();if(!a)return;$("#r-go").disabled=true;$("#r-go").textContent="Drafting…";
+ try{await post("/api/risk/draft",{activity:a,project_id:scope});$("#r-act").value="";loadRisk()}catch(e){alert(e.message)}$("#r-go").disabled=false;$("#r-go").textContent="Draft"};
+
+// log
+async function loadLog(){const l=await api("/api/log");$("#loglist").innerHTML="<tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th></tr>"+l.map(x=>`<tr><td>${x.ts}</td><td>${esc(x.user||"-")}</td><td>${esc(x.action)}</td><td>${esc(x.detail)}</td></tr>`).join("")}
+
+
+// ---- users (admin)
+async function loadUsers(){loadNet();const u=await api("/api/users");
+ $("#ulist").innerHTML="<tr><th>User</th><th>Role</th><th>Created</th><th></th></tr>"+u.map(x=>`<tr><td>${esc(x.username)}${x.id===ME.id?' <span class="mute">(you)</span>':""}</td>
+  <td><select onchange="setRole(${x.id},this.value)" ${x.id===ME.id?"disabled":""}><option value="member" ${x.role==="member"?"selected":""}>Member</option><option value="admin" ${x.role==="admin"?"selected":""}>Admin</option></select></td>
+  <td>${x.created}</td><td>${x.id===ME.id?"":`<button class="s" onclick="resetPw(${x.id},'${esc(x.username)}')">Reset password</button> <button class="s" onclick="delUser(${x.id},'${esc(x.username)}')">Delete</button>`}</td></tr>`).join("")}
+async function loadNet(){try{const n=await api("/api/network");
+ $("#netinfo").innerHTML=n.shared?`Sharing is <b>on</b>. Colleagues on your network can open: ${n.urls.map(u=>`<b>${esc(u)}</b>`).join(", ")||"(no network address found)"}<br>Connections are not encrypted, so use a trusted network or VPN. Closing this app stops the server for everyone.`
+  :"Sharing is <b>off</b>: only this computer can connect. To let colleagues sign in from their browsers, close the app and start it with <b>SMS Workspace (share).bat</b>."}catch{}}
+async function setRole(id,role){try{await put("/api/users/"+id,{role})}catch(e){alert(e.message)}loadUsers()}
+async function resetPw(id,name){const p=prompt(`New temporary password for ${name} (10+ characters). They will be signed out everywhere.`);if(!p)return;try{await put("/api/users/"+id,{password:p});alert("Password reset.")}catch(e){alert(e.message)}}
+async function delUser(id,name){if(confirm(`Delete ${name}? Their private chats are deleted; shared work stays.`)){try{await api("/api/users/"+id,{method:"DELETE"})}catch(e){alert(e.message)}loadUsers()}}
+$("#u-add").onclick=async()=>{try{await post("/api/users",{username:$("#u-name").value,password:$("#u-pw").value,role:$("#u-role").value});$("#u-name").value="";$("#u-pw").value="";loadUsers()}catch(e){alert(e.message)}};
+
+// ---- sign-in
+const FIELDS={username:'<input name="username" placeholder="Username" autocomplete="username" required>',
+ password:'<input name="password" type="password" placeholder="Password" autocomplete="current-password" required>',
+ newpw:'<input name="newpw" type="password" placeholder="New password (10+ characters)" autocomplete="new-password" required>',
+ confirm:'<input name="confirm" type="password" placeholder="Repeat password" autocomplete="new-password" required>',
+ current:'<input name="current" type="password" placeholder="Current password" autocomplete="current-password" required>'};
+function showAuth(mode,msg){ME=null;$("#auth").classList.remove("hide");$("#who").textContent="";$("#acct").classList.add("hide");$("#logout").classList.add("hide");
+ const T={setup:["Welcome","Create the administrator account. You can add other users afterwards."],login:["Sign in",msg||""],password:["Change password",msg||""]}[mode];
+ $("#auth-title").textContent=T[0];$("#auth-msg").textContent=T[1];
+ const f=$("#auth-form");
+ f.innerHTML=({setup:FIELDS.username+FIELDS.newpw+FIELDS.confirm,login:FIELDS.username+FIELDS.password,password:FIELDS.current+FIELDS.newpw+FIELDS.confirm}[mode])
+  +'<div class="err" id="auth-err"></div><div class="row"><button class="p grow" type="submit">'+({setup:"Create account",login:"Sign in",password:"Change password"}[mode])+'</button>'+(mode==="password"?'<button class="s" type="button" id="auth-cancel">Cancel</button>':"")+'</div>';
+ const first=f.querySelector("input");first&&first.focus();
+ if(mode==="password")$("#auth-cancel").onclick=()=>$("#auth").classList.add("hide");
+ f.onsubmit=async ev=>{ev.preventDefault();const v=Object.fromEntries(new FormData(f));$("#auth-err").textContent="";
+  try{
+   if(mode==="password"){if(v.newpw!==v.confirm)throw new Error("The new passwords do not match.");await post("/api/auth/password",{current:v.current,new:v.newpw});$("#auth").classList.add("hide");alert("Password changed.");return}
+   if(mode==="setup"&&v.newpw!==v.confirm)throw new Error("The passwords do not match.");
+   const u=await post("/api/auth/"+mode,{username:v.username,password:mode==="setup"?v.newpw:v.password});enter(u)
+  }catch(e){$("#auth-err").textContent=e.message}}}
+function enter(u){ME=u;$("#auth").classList.add("hide");$("#who").textContent=`${u.username} · ${u.role}`;$("#acct").classList.remove("hide");$("#logout").classList.remove("hide");
+ curProject=null;curChat=null;scope=null;buildNav();status();show("docs")}
+$("#acct").onclick=()=>showAuth("password");
+$("#logout").onclick=async()=>{try{await post("/api/auth/logout",{})}catch{}showAuth("login")};
+async function boot(){try{const s=await (await fetch("/api/auth/status")).json();
+ if(s.setup_needed)showAuth("setup");else if(!s.user)showAuth("login");else enter(s.user)}catch{$("#st").textContent="server error"}}
+boot();
+</script>
+</body>
+</html>

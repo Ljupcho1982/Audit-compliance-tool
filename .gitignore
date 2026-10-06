@@ -1,0 +1,24 @@
+# Real data: documents, users, password hashes, chats. Never commit.
+workspace.db
+workspace.db-*
+*.db
+SMS Workspace Data/
+exports/
+
+# Build output (share these as GitHub Release files instead)
+dist/
+build/
+*.spec
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Secrets and editor/OS files
+.env
+*.log
+.vscode/
+.idea/
+Thumbs.db

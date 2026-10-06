@@ -1,0 +1,143 @@
+date,category,description
+2025-07-03,Laser,"Green laser illumination on final approach, reported to ATC."
+2025-07-03,Unstable approach,"Approach unstable below 1000 ft, high rate of descent, go-around flown."
+2025-07-04,Bird strike,"Flock of birds on climb-out, one strike to radome, aircraft returned."
+2025-07-04,Technical defect,"APU failed to start, delayed departure."
+2025-07-17,Fatigue,"Crew reported fatigue after four early starts, duty extended due to delay."
+2025-07-18,Runway incursion,"Taxi clearance misunderstood, aircraft stopped short of holding point."
+2025-07-18,Technical defect,"Hydraulic pressure caution in cruise, procedure followed, landed normally."
+2025-07-19,Ground damage,Baggage loader contacted fuselage during turnaround at stand 1.
+2025-07-20,Ground damage,Baggage loader contacted fuselage during turnaround at stand 1.
+2025-07-27,Unstable approach,"Late configuration on approach in strong crosswind, stable by 500 ft."
+2025-08-08,Technical defect,"Cabin pressure fluctuation reported, descended to FL100."
+2025-08-09,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2025-08-10,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2025-08-14,Bird strike,"Flock of birds on climb-out, one strike to radome, aircraft returned."
+2025-08-14,Technical defect,"Hydraulic pressure caution in cruise, procedure followed, landed normally."
+2025-08-15,Ground damage,Ground vehicle parked inside wingtip clearance zone at gate 6.
+2025-08-17,Fatigue,"Crew reported fatigue after four early starts, duty extended due to delay."
+2025-08-19,Bird strike,"Bird activity reported near threshold, go-around flown."
+2025-08-20,Fatigue,Cabin crew fatigue report following night turnaround.
+2025-09-01,Fatigue,"Crew reported fatigue after four early starts, duty extended due to delay."
+2025-09-02,Unstable approach,"Late configuration on approach in strong crosswind, stable by 500 ft."
+2025-09-04,Bird strike,"Bird strike on approach runway 27, no damage found on inspection."
+2025-09-05,Bird strike,"Bird activity reported near threshold, go-around flown."
+2025-09-06,Runway incursion,"Vehicle on runway while cleared for take-off, take-off rejected."
+2025-09-07,Bird strike,"Bird activity reported near threshold, go-around flown."
+2025-09-13,Fuel,"Fuel figure discrepancy between flight plan and uplift, resolved before departure."
+2025-09-13,Unstable approach,"Unstable approach, speed high on short final, crew continued and landed."
+2025-09-15,Ground damage,Ground vehicle parked inside wingtip clearance zone at gate 1.
+2025-09-15,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2025-09-15,Technical defect,"APU failed to start, delayed departure."
+2025-09-16,Bird strike,"Bird activity reported near threshold, go-around flown."
+2025-09-21,Technical defect,"Hydraulic pressure caution in cruise, procedure followed, landed normally."
+2025-09-22,Ground damage,Ground vehicle parked inside wingtip clearance zone at gate 6.
+2025-09-23,Ground damage,Ground vehicle parked inside wingtip clearance zone at gate 5.
+2025-09-28,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2025-10-01,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2025-10-01,Unstable approach,"Late configuration on approach in strong crosswind, stable by 500 ft."
+2025-10-03,Bird strike,"Flock of birds on climb-out, one strike to radome, aircraft returned."
+2025-10-06,Runway incursion,"Taxi clearance misunderstood, aircraft stopped short of holding point."
+2025-10-07,Unstable approach,"Unstable approach, speed high on short final, crew continued and landed."
+2025-10-10,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2025-10-12,Runway incursion,"Taxi clearance misunderstood, aircraft stopped short of holding point."
+2025-10-18,Technical defect,"Hydraulic pressure caution in cruise, procedure followed, landed normally."
+2025-10-21,Ground damage,Baggage loader contacted fuselage during turnaround at stand 5.
+2025-10-23,Bird strike,"Bird activity reported near threshold, go-around flown."
+2025-10-23,Fatigue,Cabin crew fatigue report following night turnaround.
+2025-10-24,Bird strike,"Bird strike on approach runway 14, no damage found on inspection."
+2025-10-25,Unstable approach,"Approach unstable below 1000 ft, high rate of descent, go-around flown."
+2025-10-26,Ground damage,Ground vehicle parked inside wingtip clearance zone at gate 4.
+2025-10-28,Technical defect,"Cabin pressure fluctuation reported, descended to FL100."
+2025-11-01,Fuel,"Fuel figure discrepancy between flight plan and uplift, resolved before departure."
+2025-11-03,Runway incursion,"Taxi clearance misunderstood, aircraft stopped short of holding point."
+2025-11-05,Fatigue,Cabin crew fatigue report following night turnaround.
+2025-11-07,Bird strike,"Bird strike on approach runway 09, no damage found on inspection."
+2025-11-12,Laser,"Green laser illumination on final approach, reported to ATC."
+2025-11-14,Laser,"Green laser illumination on final approach, reported to ATC."
+2025-11-16,Technical defect,"Cabin pressure fluctuation reported, descended to FL100."
+2025-11-16,Unstable approach,"Unstable approach, speed high on short final, crew continued and landed."
+2025-11-20,Bird strike,"Flock of birds on climb-out, one strike to radome, aircraft returned."
+2025-11-24,Fatigue,Cabin crew fatigue report following night turnaround.
+2025-11-26,Ground damage,Baggage loader contacted fuselage during turnaround at stand 1.
+2025-11-27,Fuel,"Fuel figure discrepancy between flight plan and uplift, resolved before departure."
+2025-12-05,Technical defect,"APU failed to start, delayed departure."
+2025-12-07,Bird strike,"Bird strike on approach runway 09, no damage found on inspection."
+2025-12-09,Unstable approach,"Approach unstable below 1000 ft, high rate of descent, go-around flown."
+2025-12-15,Ground damage,Baggage loader contacted fuselage during turnaround at stand 6.
+2025-12-15,Laser,"Green laser illumination on final approach, reported to ATC."
+2025-12-18,Ground damage,Ground vehicle parked inside wingtip clearance zone at gate 2.
+2025-12-20,Fatigue,"Crew reported fatigue after four early starts, duty extended due to delay."
+2025-12-20,Runway incursion,"Vehicle on runway while cleared for take-off, take-off rejected."
+2025-12-22,Technical defect,"APU failed to start, delayed departure."
+2025-12-23,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2025-12-25,Bird strike,"Bird strike on approach runway 27, no damage found on inspection."
+2025-12-25,Bird strike,"Flock of birds on climb-out, one strike to radome, aircraft returned."
+2025-12-25,Ground damage,Baggage loader contacted fuselage during turnaround at stand 1.
+2025-12-28,Ground damage,Ground vehicle parked inside wingtip clearance zone at gate 1.
+2026-01-01,Bird strike,"Flock of birds on climb-out, one strike to radome, aircraft returned."
+2026-01-03,Unstable approach,"Late configuration on approach in strong crosswind, stable by 500 ft."
+2026-01-03,Unstable approach,"Late configuration on approach in strong crosswind, stable by 500 ft."
+2026-01-05,Technical defect,"Cabin pressure fluctuation reported, descended to FL100."
+2026-01-06,Runway incursion,"Vehicle on runway while cleared for take-off, take-off rejected."
+2026-01-09,Bird strike,"Bird strike on approach runway 09, no damage found on inspection."
+2026-01-13,Laser,"Green laser illumination on final approach, reported to ATC."
+2026-01-13,Unstable approach,"Unstable approach, speed high on short final, crew continued and landed."
+2026-01-14,Technical defect,"APU failed to start, delayed departure."
+2026-01-15,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2026-01-23,Unstable approach,"Unstable approach, speed high on short final, crew continued and landed."
+2026-01-27,Runway incursion,"Taxi clearance misunderstood, aircraft stopped short of holding point."
+2026-02-02,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2026-02-05,Ground damage,Ground vehicle parked inside wingtip clearance zone at gate 7.
+2026-02-09,Ground damage,Baggage loader contacted fuselage during turnaround at stand 3.
+2026-02-09,Unstable approach,"Late configuration on approach in strong crosswind, stable by 500 ft."
+2026-02-14,Unstable approach,"Unstable approach, speed high on short final, crew continued and landed."
+2026-02-17,Bird strike,"Bird strike on approach runway 27, no damage found on inspection."
+2026-02-18,Runway incursion,"Taxi clearance misunderstood, aircraft stopped short of holding point."
+2026-02-23,Ground damage,Ground vehicle parked inside wingtip clearance zone at gate 8.
+2026-02-26,Fuel,"Fuel figure discrepancy between flight plan and uplift, resolved before departure."
+2026-02-27,Bird strike,"Bird strike on approach runway 27, no damage found on inspection."
+2026-03-01,Unstable approach,"Approach unstable below 1000 ft, high rate of descent, go-around flown."
+2026-03-02,Runway incursion,"Vehicle on runway while cleared for take-off, take-off rejected."
+2026-03-09,Bird strike,"Flock of birds on climb-out, one strike to radome, aircraft returned."
+2026-03-09,Unstable approach,"Unstable approach, speed high on short final, crew continued and landed."
+2026-03-12,Unstable approach,"Approach unstable below 1000 ft, high rate of descent, go-around flown."
+2026-03-14,Fatigue,"Crew reported fatigue after four early starts, duty extended due to delay."
+2026-03-16,Bird strike,"Flock of birds on climb-out, one strike to radome, aircraft returned."
+2026-03-17,Bird strike,"Bird activity reported near threshold, go-around flown."
+2026-03-18,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2026-03-22,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2026-03-23,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2026-03-23,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2026-03-27,Unstable approach,"Approach unstable below 1000 ft, high rate of descent, go-around flown."
+2026-03-28,Bird strike,"Bird strike on approach runway 14, no damage found on inspection."
+2026-04-02,Unstable approach,"Late configuration on approach in strong crosswind, stable by 500 ft."
+2026-04-03,Fuel,"Fuel figure discrepancy between flight plan and uplift, resolved before departure."
+2026-04-04,Bird strike,"Bird strike on approach runway 14, no damage found on inspection."
+2026-04-05,Fatigue,Cabin crew fatigue report following night turnaround.
+2026-04-05,Fatigue,Cabin crew fatigue report following night turnaround.
+2026-04-10,Technical defect,"Cabin pressure fluctuation reported, descended to FL100."
+2026-04-13,Bird strike,"Flock of birds on climb-out, one strike to radome, aircraft returned."
+2026-04-21,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2026-04-25,Ground damage,Baggage loader contacted fuselage during turnaround at stand 9.
+2026-04-28,Technical defect,"Hydraulic pressure caution in cruise, procedure followed, landed normally."
+2026-05-03,Fatigue,Cabin crew fatigue report following night turnaround.
+2026-05-08,Fatigue,Cabin crew fatigue report following night turnaround.
+2026-05-09,Bird strike,"Bird activity reported near threshold, go-around flown."
+2026-05-09,Technical defect,"APU failed to start, delayed departure."
+2026-05-11,Technical defect,"Hydraulic pressure caution in cruise, procedure followed, landed normally."
+2026-05-18,Bird strike,"Bird strike on approach runway 14, no damage found on inspection."
+2026-05-20,Ground damage,Ground vehicle parked inside wingtip clearance zone at gate 1.
+2026-05-20,Unstable approach,"Late configuration on approach in strong crosswind, stable by 500 ft."
+2026-06-05,Bird strike,"Bird strike on approach runway 09, no damage found on inspection."
+2026-06-06,Ground damage,"Tug struck wingtip while pushing back, damage inspected."
+2026-06-08,Fatigue,Cabin crew fatigue report following night turnaround.
+2026-06-09,Bird strike,"Flock of birds on climb-out, one strike to radome, aircraft returned."
+2026-06-10,Ground damage,Baggage loader contacted fuselage during turnaround at stand 4.
+2026-06-13,Bird strike,"Bird activity reported near threshold, go-around flown."
+2026-06-13,Bird strike,"Flock of birds on climb-out, one strike to radome, aircraft returned."
+2026-06-13,Unstable approach,"Approach unstable below 1000 ft, high rate of descent, go-around flown."
+2026-06-15,Ground damage,Ground vehicle parked inside wingtip clearance zone at gate 5.
+2026-06-15,Laser,"Green laser illumination on final approach, reported to ATC."
+2026-06-20,Fatigue,Cabin crew fatigue report following night turnaround.
+2026-06-22,Laser,"Green laser illumination on final approach, reported to ATC."
